@@ -175,16 +175,7 @@ public class HomeFragment extends PlaceholderFragment {
 				return false;
 			}
 		});
-		
-		mWebView.setOnTouchListener(new OnTouchListener() {
-			
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				System.out.println("child --> " + event.getAction());
-				
-				return false;
-			}
-		});
+
 		/**
 		* Fragment中，注册
 		* 接收MainActivity的Touch回调的对象
@@ -193,7 +184,6 @@ public class HomeFragment extends PlaceholderFragment {
 		myTouchListener = new MainActivity.MyTouchListener() {
 		    @Override
 		    public void onTouchEvent(MotionEvent event) {
-		    	//System.out.println(mWebView.onTouchEvent(event));
 		    	gestureDetector.onTouchEvent(event);  
 		    }
 		};
