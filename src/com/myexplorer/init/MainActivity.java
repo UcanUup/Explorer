@@ -1,4 +1,4 @@
-package com.myexplorer;
+package com.myexplorer.init;
 
 import java.util.ArrayList;
 
@@ -13,6 +13,12 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.Window;
 
+import com.myexplorer.R;
+import com.myexplorer.R.id;
+import com.myexplorer.R.layout;
+import com.myexplorer.R.menu;
+import com.myexplorer.R.string;
+import com.myexplorer.init.NavigationDrawerFragment.NavigationDrawerCallbacks;
 import com.myexplorer.tab.HomeFragment;
 
 public class MainActivity extends Activity implements

@@ -8,7 +8,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnKeyListener;
-import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
@@ -18,9 +17,10 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.myexplorer.MainActivity;
-import com.myexplorer.MainActivity.PlaceholderFragment;
 import com.myexplorer.R;
+import com.myexplorer.init.MainActivity;
+import com.myexplorer.init.MainActivity.PlaceholderFragment;
+import com.myexplorer.sqlite.HistoryDatabase;
 import com.myexplorer.utils.Validation;
 
 public class HomeFragment extends PlaceholderFragment {
@@ -71,6 +71,10 @@ public class HomeFragment extends PlaceholderFragment {
 				}
 				else {
 					mProgress.setVisibility(View.GONE);
+					
+					// 插入到历史记录中
+					HistoryDatabase historyDatabase = new HistoryDatabase(getActivity());
+					historyDatabase.write(mWebView.getTitle(), mWebView.getUrl());
 				}
 				
 				super.onProgressChanged(view, newProgress);
@@ -218,7 +222,7 @@ public class HomeFragment extends PlaceholderFragment {
 			return;
 		}
 		
-		mWebView.loadUrl(HttpUrl.home);
+		mWebView.loadUrl(HttpUrl.HOME);
 	}
 
 }

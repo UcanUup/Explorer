@@ -1,4 +1,11 @@
-package com.myexplorer;
+package com.myexplorer.init;
+
+import com.myexplorer.R;
+import com.myexplorer.R.drawable;
+import com.myexplorer.R.id;
+import com.myexplorer.R.layout;
+import com.myexplorer.R.menu;
+import com.myexplorer.R.string;
 
 import android.app.Activity;
 import android.app.ActionBar;

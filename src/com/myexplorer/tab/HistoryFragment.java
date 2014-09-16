@@ -5,9 +5,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.myexplorer.MainActivity.PlaceholderFragment;
+import com.myexplorer.init.MainActivity.PlaceholderFragment;
 
-public class ExitFragment extends PlaceholderFragment {
+public class HistoryFragment extends PlaceholderFragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
