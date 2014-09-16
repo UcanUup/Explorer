@@ -19,6 +19,7 @@ import com.myexplorer.R.layout;
 import com.myexplorer.R.menu;
 import com.myexplorer.R.string;
 import com.myexplorer.init.NavigationDrawerFragment.NavigationDrawerCallbacks;
+import com.myexplorer.tab.HistoryFragment;
 import com.myexplorer.tab.HomeFragment;
 
 public class MainActivity extends Activity implements
@@ -87,8 +88,6 @@ public class MainActivity extends Activity implements
 	*/
 	@Override
 	public boolean dispatchTouchEvent(MotionEvent ev) { 
-		System.out.println("Main -- > " + ev.getAction());
-		
 	    for (MyTouchListener listener : myTouchListeners) {
 	        listener.onTouchEvent(ev);
 	    }
@@ -210,6 +209,9 @@ public class MainActivity extends Activity implements
 			switch(mSelectedNum) {
 			case HOME_PAGE: 
 				fragment = new HomeFragment();
+				break;
+			case HISTORY_RECORD: 
+				fragment = new HistoryFragment();
 				break;
 			default:
 				fragment = new PlaceholderFragment();

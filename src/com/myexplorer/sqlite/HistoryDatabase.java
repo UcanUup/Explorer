@@ -1,9 +1,12 @@
 package com.myexplorer.sqlite;
 
-import com.myexplorer.lib.DatabaseInfo;
+import java.util.ArrayList;
 
 import android.content.Context;
 import android.database.Cursor;
+
+import com.myexplorer.lib.DatabaseInfo;
+import com.myexplorer.lib.Variable;
 
 public class HistoryDatabase {
 	
@@ -29,9 +32,11 @@ public class HistoryDatabase {
 		sql = "select * from " + TABLE_NAME;
 		Cursor cursor = db.find(sql);
 		
+		Variable.historyName = new ArrayList<String>();
+		Variable.historySite = new ArrayList<String>();
 		while (cursor.moveToNext()) {
-//			UserInfo.email = cursor.getString(cursor.getColumnIndex("webname"));
-//			UserInfo.userName = cursor.getString(cursor.getColumnIndex("website"));
+			Variable.historyName.add(cursor.getString(cursor.getColumnIndex("webname")));
+			Variable.historySite.add(cursor.getString(cursor.getColumnIndex("website")));
 		}
 		
 		db.close();

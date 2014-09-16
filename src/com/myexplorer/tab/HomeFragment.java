@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.myexplorer.R;
 import com.myexplorer.init.MainActivity;
 import com.myexplorer.init.MainActivity.PlaceholderFragment;
+import com.myexplorer.lib.HttpUrl;
 import com.myexplorer.sqlite.HistoryDatabase;
 import com.myexplorer.utils.Validation;
 
