@@ -1,5 +1,6 @@
 package com.myexplorer.tab;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.GestureDetector;
 import android.view.KeyEvent;
@@ -21,6 +22,7 @@ import com.myexplorer.R;
 import com.myexplorer.init.MainActivity;
 import com.myexplorer.init.MainActivity.PlaceholderFragment;
 import com.myexplorer.lib.HttpUrl;
+import com.myexplorer.lib.Variable;
 import com.myexplorer.sqlite.HistoryDatabase;
 import com.myexplorer.utils.Validation;
 
@@ -217,6 +219,14 @@ public class HomeFragment extends PlaceholderFragment {
 	}
 	
 	void onInit() {
+		// 从历史记录中跳转的情况		
+		String link = Variable.gotoUrl;
+		Variable.gotoUrl = "";
+		if (link != null && !link.equals("")) {
+			mWebView.loadUrl(link);
+			return;
+		}
+		
 		// 判断是否有网络连接
 		if (!Validation.isNetAvailable(getActivity())) {
 			Toast.makeText(getActivity(), R.string.internet_error, Toast.LENGTH_SHORT).show();

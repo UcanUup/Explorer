@@ -14,7 +14,13 @@
 
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
+        <item name="android:actionMenuTextAppearance">@style/MenuTextStyle</item>
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
+    
+    <style name="MenuTextStyle">
+    	<item name="android:textColor">@color/grey</item>
+    	<item name="android:textSize">18sp</item>
+	</style>
 
 </resources>

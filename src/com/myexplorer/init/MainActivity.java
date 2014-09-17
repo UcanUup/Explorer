@@ -121,7 +121,7 @@ public class MainActivity extends Activity implements
 			return;    // 因为后面的方法还会执行，所以需要return掉
 		}
 		
-		// update the main content by replacing fragments
+		// 切换fragment
 		FragmentManager fragmentManager = getFragmentManager();
 		fragmentManager
 				.beginTransaction()

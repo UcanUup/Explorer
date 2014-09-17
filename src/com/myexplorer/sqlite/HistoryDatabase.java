@@ -35,8 +35,8 @@ public class HistoryDatabase {
 		Variable.historyName = new ArrayList<String>();
 		Variable.historySite = new ArrayList<String>();
 		while (cursor.moveToNext()) {
-			Variable.historyName.add(cursor.getString(cursor.getColumnIndex("webname")));
-			Variable.historySite.add(cursor.getString(cursor.getColumnIndex("website")));
+			Variable.historyName.add(0, cursor.getString(cursor.getColumnIndex("webname")));
+			Variable.historySite.add(0, cursor.getString(cursor.getColumnIndex("website")));
 		}
 		
 		db.close();
