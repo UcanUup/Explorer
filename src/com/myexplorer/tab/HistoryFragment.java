@@ -12,6 +12,7 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.CheckBox;
 import android.widget.ListView;
 
 import com.myexplorer.R;
@@ -39,7 +40,7 @@ public class HistoryFragment extends PlaceholderFragment {
 		historyDatabase.read();
 		
 		lv = (ListView)rootView.findViewById(R.id.history_list_view);
-		lv.setAdapter(new HistoryAdapter(getActivity()));
+		lv.setAdapter(new HistoryAdapter(getActivity(), false, false));
 		
 		lv.setOnItemClickListener(new OnItemClickListener() {
 			@Override
@@ -66,6 +67,8 @@ public class HistoryFragment extends PlaceholderFragment {
 				// 长按时重新更新actionbar的item
 				longClick = true;
 				getActivity().getWindow().invalidatePanelMenu(Window.FEATURE_OPTIONS_PANEL);
+				// 重新设置listview以显示checkbox
+				lv.setAdapter(new HistoryAdapter(getActivity(), true, false));
 				
 				return true;
 			}
@@ -86,10 +89,26 @@ public class HistoryFragment extends PlaceholderFragment {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
 		if (id == SELECT_ALL) {
-			System.out.println("全选");
+			// 重新设置listview
+			lv.setAdapter(new HistoryAdapter(getActivity(), true, true));
 			return true;
-		} else if (id == DELETE_SELECT) {
-			System.out.println("删除所选");
+		}
+		else if (id == DELETE_SELECT) {
+			// 删除选择元素
+			int j = 0;
+			for (int i = 0; i < Variable.historyChecks.length; i++) {
+				if (Variable.historyChecks[i]) {
+					Variable.historyName.remove(i-j);
+					Variable.historySite.remove(i-j);
+					j++;
+				}
+			}
+			// 重新设置listview
+			lv.setAdapter(new HistoryAdapter(getActivity(), false, false));
+			// 重新加载actionbar
+			longClick = false;
+			getActivity().getWindow().invalidatePanelMenu(Window.FEATURE_OPTIONS_PANEL);
+			
 			return true;
 		}
 		

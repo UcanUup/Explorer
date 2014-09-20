@@ -1,6 +1,5 @@
 package com.myexplorer.adapter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
@@ -8,6 +7,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -17,16 +19,26 @@ import com.myexplorer.lib.Variable;
 public class HistoryAdapter extends BaseAdapter {
 	
 	private Context mContext;
+	private boolean isDelete;
 	
 	private List<String> item1;
 	private List<String> item2;
 		
-	public HistoryAdapter(Context mContext) {
+	public HistoryAdapter(Context mContext, boolean isDelete, boolean selectAll) {
 		super();
 		this.mContext = mContext;
+		this.isDelete = isDelete;
 		
 		item1 = Variable.historyName;
 		item2 = Variable.historySite;
+		
+		Variable.historyChecks = new boolean[item1.size()];
+		// 全部选中的时候
+		if (selectAll) {
+			for (int i = 0; i < Variable.historyChecks.length; i++) {
+				Variable.historyChecks[i] = true;
+			}
+		}
 	}
 
 	@Override
@@ -48,6 +60,26 @@ public class HistoryAdapter extends BaseAdapter {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		// 设置每一个项显示的内容
 		RelativeLayout layout = (RelativeLayout)LayoutInflater.from(mContext).inflate(R.layout.history_item, null);
+		
+		// 删除状态的时候复选框才会显示
+		if (isDelete) {
+			CheckBox cb = (CheckBox)layout.findViewById(R.id.item_cb);
+			cb.setFocusable(true);
+			cb.setClickable(true);
+			cb.setVisibility(View.VISIBLE);
+			
+			// listview滚动时能够保存check选中的状态
+			final int pos = position;
+			cb.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+				@Override
+				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+					Variable.historyChecks[pos] = isChecked;
+				}
+			});
+			
+			cb.setChecked(Variable.historyChecks[position]);
+		}
+		
 		TextView tv1 = (TextView)layout.findViewById(R.id.name);		
 		tv1.setText(item1.get(position));
 		
