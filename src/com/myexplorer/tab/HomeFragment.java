@@ -43,6 +43,8 @@ public class HomeFragment extends PlaceholderFragment {
 	private final int SECOND_TIME = 1;
 	private final int SERVERAL_TIME = 2;
 	
+	private int loadTimes = FIRST_TIME;
+	
 	// WebView的缩放规模和缩放次数
 	private float orginalScale;
 	private float currentScale = 0;
@@ -75,9 +77,13 @@ public class HomeFragment extends PlaceholderFragment {
 				else {
 					mProgress.setVisibility(View.GONE);
 					
-					// 插入到历史记录中
-					HistoryDatabase historyDatabase = new HistoryDatabase(getActivity());
-					historyDatabase.write(mWebView.getTitle(), mWebView.getUrl());
+					if (loadTimes != FIRST_TIME) {
+						// 插入到历史记录中
+						HistoryDatabase historyDatabase = new HistoryDatabase(getActivity());
+						historyDatabase.write(mWebView.getTitle(), mWebView.getUrl());
+					}
+					else 
+						loadTimes = SECOND_TIME;
 				}
 				
 				super.onProgressChanged(view, newProgress);

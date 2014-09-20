@@ -2,6 +2,7 @@ package com.myexplorer.tab;
 
 import android.app.FragmentManager;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -12,7 +13,6 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.CheckBox;
 import android.widget.ListView;
 
 import com.myexplorer.R;
@@ -24,10 +24,12 @@ import com.myexplorer.sqlite.HistoryDatabase;
 public class HistoryFragment extends PlaceholderFragment {
 
 	private ListView lv;
-	private boolean longClick = false;
+	private boolean allSelect = false;    // 用于改变actionbar上的全选或全不选
+	private boolean isDelete = false;    // 用于是否显示actionbar上的删除
 	
 	private final int SELECT_ALL = 0;
-	private final int DELETE_SELECT = 1;
+	private final int SELECT_NONE = 1;
+	private final int DELETE_SELECT = 2;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -65,17 +67,22 @@ public class HistoryFragment extends PlaceholderFragment {
 			public boolean onItemLongClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				// 长按时重新更新actionbar的item
-				longClick = true;
+				isDelete = true;
 				getActivity().getWindow().invalidatePanelMenu(Window.FEATURE_OPTIONS_PANEL);
 				// 重新设置listview以显示checkbox
 				lv.setAdapter(new HistoryAdapter(getActivity(), true, false));
-				
+	
 				return true;
 			}
 		});
 		
 		// 设置这个才能关于菜单的回调函数才有用
 		setHasOptionsMenu(true);
+		
+		// 这个和下面的这个命令必须要设置了，才能监听back事件
+		lv.setFocusable(true);
+        lv.setFocusableInTouchMode(true);
+        lv.setOnKeyListener(backListener);
 		
 		return rootView;
 	}
@@ -89,6 +96,8 @@ public class HistoryFragment extends PlaceholderFragment {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
 		if (id == SELECT_ALL) {
+			allSelect = true;
+			getActivity().getWindow().invalidatePanelMenu(Window.FEATURE_OPTIONS_PANEL);
 			// 重新设置listview
 			lv.setAdapter(new HistoryAdapter(getActivity(), true, true));
 			return true;
@@ -96,20 +105,28 @@ public class HistoryFragment extends PlaceholderFragment {
 		else if (id == DELETE_SELECT) {
 			// 删除选择元素
 			int j = 0;
+			HistoryDatabase historyDatabase = new HistoryDatabase(getActivity());
 			for (int i = 0; i < Variable.historyChecks.length; i++) {
 				if (Variable.historyChecks[i]) {
+					historyDatabase.delete(Variable.historyId.get(i-j));
+					Variable.historyId.remove(i-j);
 					Variable.historyName.remove(i-j);
 					Variable.historySite.remove(i-j);
 					j++;
 				}
 			}
+			isDelete = false;
+			getActivity().getWindow().invalidatePanelMenu(Window.FEATURE_OPTIONS_PANEL);
 			// 重新设置listview
 			lv.setAdapter(new HistoryAdapter(getActivity(), false, false));
-			// 重新加载actionbar
-			longClick = false;
-			getActivity().getWindow().invalidatePanelMenu(Window.FEATURE_OPTIONS_PANEL);
 			
 			return true;
+		}
+		else if (id == SELECT_NONE) {
+			allSelect = false;
+			getActivity().getWindow().invalidatePanelMenu(Window.FEATURE_OPTIONS_PANEL);
+			// 重新设置listview
+			lv.setAdapter(new HistoryAdapter(getActivity(), true, false));
 		}
 		
 		return super.onOptionsItemSelected(item);
@@ -119,15 +136,44 @@ public class HistoryFragment extends PlaceholderFragment {
 	public void onPrepareOptionsMenu(Menu menu) {
 		menu.clear();
 		
-		// 长按时更新actionbar
-		if (longClick) {
+		// actionbar显示全选和删除
+		if (!allSelect && isDelete) {
 			menu.add(0, SELECT_ALL, SELECT_ALL, R.string.select_all)
 				.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
 			menu.add(0, DELETE_SELECT, DELETE_SELECT, R.string.delete)
 				.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+			
+			allSelect = true;
+		}
+		// actionbar显示全不选和删除
+		else if (allSelect && isDelete) {
+			menu.add(0, SELECT_NONE, SELECT_NONE, R.string.select_none)
+			.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+			menu.add(0, DELETE_SELECT, DELETE_SELECT, R.string.delete)
+			.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+			
+			allSelect = false;
 		}
 		
 		super.onPrepareOptionsMenu(menu);
 	}
+	
+	private View.OnKeyListener backListener = new View.OnKeyListener() {
+		@Override
+		public boolean onKey(View v, int keyCode, KeyEvent event) {
+			if (keyCode == KeyEvent.KEYCODE_BACK
+					&& event.getAction() == KeyEvent.ACTION_DOWN) {
+				System.out.println("21312");
+				// 删除过程中按下返回键返回
+				allSelect = false;
+				isDelete = false;
+				getActivity().getWindow().invalidatePanelMenu(Window.FEATURE_OPTIONS_PANEL);
+				// 重新设置listview
+				lv.setAdapter(new HistoryAdapter(getActivity(), false, false));
+				return true;
+			}			
+			return false;
+		}
+    };
 
 }

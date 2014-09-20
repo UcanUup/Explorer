@@ -1,6 +1,7 @@
 package com.myexplorer.sqlite;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -17,7 +18,7 @@ public class HistoryDatabase {
 	
 	// 建表语句，每次都会使用
 	private String createSql = "create table " + TABLE_NAME
-			+ " (webname varchar(100), website varchar(100))";
+			+ " (id integer primary key, webname varchar(100), website varchar(100))";
 	
 	public HistoryDatabase(Context mContext) {
 		this.mContext = mContext;
@@ -32,9 +33,11 @@ public class HistoryDatabase {
 		sql = "select * from " + TABLE_NAME;
 		Cursor cursor = db.find(sql);
 		
+		Variable.historyId = new ArrayList<Integer>();
 		Variable.historyName = new ArrayList<String>();
 		Variable.historySite = new ArrayList<String>();
 		while (cursor.moveToNext()) {
+			Variable.historyId.add(0, cursor.getInt(cursor.getColumnIndex("id")));
 			Variable.historyName.add(0, cursor.getString(cursor.getColumnIndex("webname")));
 			Variable.historySite.add(0, cursor.getString(cursor.getColumnIndex("website")));
 		}
@@ -53,20 +56,19 @@ public class HistoryDatabase {
 		sql += " " + "(webname, website) values ";
 		sql += "('" + title + "',";
 		sql += " '" + url + "')";
-		db.insert(sql);
-		
+		db.insert(sql);		
 		db.close();
 	}
 	
 	// 删除数据库
-	public void delete() {
+	public void delete(int id) {
 		DatabaseOperation db = new DatabaseOperation(mContext);
 		sql = createSql;
 		db.open(DatabaseInfo.DATABASE_NAME, sql);
 		
-		sql = "delete from " + TABLE_NAME;
+		sql = "delete from " + TABLE_NAME 
+				+ " where id = " + id + "" ;
 		db.delete(sql);
-		
 		db.close();
 	}
 	

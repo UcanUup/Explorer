@@ -2,19 +2,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="6dp"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="6dp"
     tools:context="com.example.init.MainActivity$PlaceholderFragment" >
 
+    <RelativeLayout
+	    android:layout_height="wrap_content"
+	    android:layout_width="wrap_content"
+	    android:layout_alignParentLeft="true"
+	    android:paddingBottom="6dp"
+    	android:paddingLeft="@dimen/activity_horizontal_margin"
+    	android:paddingRight="@dimen/activity_horizontal_margin"
+    	android:paddingTop="6dp" >
 	<TextView
 	    android:id="@+id/name"
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
 	    android:layout_alignLeft="@+id/site"
 	    android:layout_alignParentTop="true"
+	    android:paddingRight="6dp"
 	    android:singleLine="true"
+	    android:ellipsize="end"  
 	    android:textAppearance="?android:attr/textAppearanceMedium" />
 
 	<TextView
@@ -27,11 +33,11 @@
 	    android:ellipsize="end"  
 	    android:textAppearance="?android:attr/textAppearanceSmall"
 	    android:textColor="@color/grey" />
+	</RelativeLayout>
 	
 	<RelativeLayout
-	    android:layout_height="fill_parent"
+	    android:layout_height="wrap_content"
 	    android:layout_width="wrap_content"
-	    android:paddingTop="5dp"
 	    android:layout_alignParentRight="true" >
 		<CheckBox  
 	        android:id="@+id/item_cb"  

@@ -34,10 +34,11 @@ public class HistoryAdapter extends BaseAdapter {
 		
 		Variable.historyChecks = new boolean[item1.size()];
 		// 全部选中的时候
-		if (selectAll) {
-			for (int i = 0; i < Variable.historyChecks.length; i++) {
+		for (int i = 0; i < Variable.historyChecks.length; i++) {
+			if (selectAll)
 				Variable.historyChecks[i] = true;
-			}
+			else
+				Variable.historyChecks[i] = false;
 		}
 	}
 
