@@ -6,7 +6,9 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.widget.DrawerLayout;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -154,6 +156,11 @@ public class MainActivity extends Activity implements
 			
 			return;
 		}
+		else if (position + 1 == SHORTCUT) {
+			createShortCut();
+			Toast.makeText(this, R.string.create_shortcut, Toast.LENGTH_SHORT).show();
+			return;
+		}
 		
 		// 切换fragment
 		FragmentManager fragmentManager = getFragmentManager();
@@ -218,6 +225,23 @@ public class MainActivity extends Activity implements
 		return super.onOptionsItemSelected(item);
 	}
 
+	// 创建桌面快捷方式
+	public void createShortCut(){
+		//创建快捷方式的Intent
+        Intent shortcutintent = new Intent("com.android.launcher.action.INSTALL_SHORTCUT");
+        //不允许重复创建
+        shortcutintent.putExtra("duplicate", false);
+        //需要现实的名称
+        shortcutintent.putExtra(Intent.EXTRA_SHORTCUT_NAME, getString(R.string.app_name));
+        //快捷图片
+        Parcelable icon = Intent.ShortcutIconResource.fromContext(getApplicationContext(), R.drawable.ic_launcher);
+        shortcutintent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, icon);
+        //点击快捷图片，运行的程序主入口
+        shortcutintent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, new Intent(getApplicationContext() , MainActivity.class));
+        //发送广播
+        sendBroadcast(shortcutintent);
+	}
+	
 	/**
 	 * A placeholder fragment containing a simple view.
 	 */

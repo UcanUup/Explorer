@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">超级浏览器</string>
+    <string name="app_name">极简浏览器</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_example">Example action</string>
@@ -18,7 +18,9 @@
     <string name="internet_error">没有网络连接</string>
     
     <string name="already_add_favor">成功添加到收藏夹</string>
-    <string name="goto_home_page">请到主页添加收藏</string>
+    <string name="goto_home_page">请到首页添加收藏</string>
+    <string name="create_shortcut">成功添加桌面快捷方式</string>
+    
     <string name="select_all">全选</string>
     <string name="delete">删除</string>
     <string name="select_none">全不选</string>
