@@ -17,6 +17,8 @@
     
     <string name="internet_error">没有网络连接</string>
     
+    <string name="already_add_favor">成功添加到收藏夹</string>
+    <string name="goto_home_page">请到主页添加收藏</string>
     <string name="select_all">全选</string>
     <string name="delete">删除</string>
     <string name="select_none">全不选</string>

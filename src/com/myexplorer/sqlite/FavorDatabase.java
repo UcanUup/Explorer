@@ -1,20 +1,20 @@
 package com.myexplorer.sqlite;
 
-import com.myexplorer.lib.DatabaseInfo;
+import java.util.ArrayList;
+import java.util.List;
 
 import android.content.Context;
 import android.database.Cursor;
+
+import com.myexplorer.lib.DatabaseInfo;
+import com.myexplorer.lib.Variable;
 
 public class FavorDatabase {
 	
 	private Context mContext;
 	
-	private final String TABLE_NAME = "History"; 
+	private final String TABLE_NAME = "Favor"; 
 	private String sql;
-	
-	// 建表语句，每次都会使用
-	private String createSql = "create table " + TABLE_NAME
-			+ " (webname varchar(100), website varchar(100))";
 	
 	public FavorDatabase(Context mContext) {
 		this.mContext = mContext;
@@ -23,48 +23,45 @@ public class FavorDatabase {
 	// 读取本地数据库的信息
 	public void read() {
 		DatabaseOperation db = new DatabaseOperation(mContext);
-		sql = createSql;
-		db.open(DatabaseInfo.DATABASE_NAME, sql);
+		db.open(DatabaseInfo.DATABASE_NAME);
 		
 		sql = "select * from " + TABLE_NAME;
 		Cursor cursor = db.find(sql);
 		
+		Variable.favorId = new ArrayList<Integer>();
+		Variable.favorName = new ArrayList<String>();
+		Variable.favorSite = new ArrayList<String>();
 		while (cursor.moveToNext()) {
-//			UserInfo.email = cursor.getString(cursor.getColumnIndex("email"));
-//			UserInfo.userName = cursor.getString(cursor.getColumnIndex("name"));
+			Variable.favorId.add(0, cursor.getInt(cursor.getColumnIndex("id")));
+			Variable.favorName.add(0, cursor.getString(cursor.getColumnIndex("webname")));
+			Variable.favorSite.add(0, cursor.getString(cursor.getColumnIndex("website")));
 		}
 		
 		db.close();
 	}
 	
 	// 将数据放入本地数据库
-	public void write() {
+	public void write(String title, String url) {
 		DatabaseOperation db = new DatabaseOperation(mContext);
-		sql = createSql;
-		db.open(DatabaseInfo.DATABASE_NAME, sql);
-		
-		sql = "delete from " + TABLE_NAME;
-		db.delete(sql);
+		db.open(DatabaseInfo.DATABASE_NAME);
 		
 		// 插入数据库中
 		sql = "insert into " + TABLE_NAME;
-		sql += " " + "(email, name) values ";
-//		sql += "('" + UserInfo.email + "',";
-//		sql += " '" + UserInfo.userName + "')";
-		db.insert(sql);
-		
+		sql += " " + "(webname, website) values ";
+		sql += "('" + title + "',";
+		sql += " '" + url + "')";
+		db.insert(sql);		
 		db.close();
 	}
 	
 	// 删除数据库
-	public void delete() {
+	public void delete(int id) {
 		DatabaseOperation db = new DatabaseOperation(mContext);
-		sql = createSql;
-		db.open(DatabaseInfo.DATABASE_NAME, sql);
+		db.open(DatabaseInfo.DATABASE_NAME);
 		
-		sql = "delete from " + TABLE_NAME;
+		sql = "delete from " + TABLE_NAME 
+				+ " where id = " + id + "" ;
 		db.delete(sql);
-		
 		db.close();
 	}
 	

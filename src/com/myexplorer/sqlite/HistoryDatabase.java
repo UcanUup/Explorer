@@ -16,10 +16,6 @@ public class HistoryDatabase {
 	private final String TABLE_NAME = "History"; 
 	private String sql;
 	
-	// 建表语句，每次都会使用
-	private String createSql = "create table " + TABLE_NAME
-			+ " (id integer primary key, webname varchar(100), website varchar(100))";
-	
 	public HistoryDatabase(Context mContext) {
 		this.mContext = mContext;
 	}
@@ -27,8 +23,7 @@ public class HistoryDatabase {
 	// 读取本地数据库的信息
 	public void read() {
 		DatabaseOperation db = new DatabaseOperation(mContext);
-		sql = createSql;
-		db.open(DatabaseInfo.DATABASE_NAME, sql);
+		db.open(DatabaseInfo.DATABASE_NAME);
 		
 		sql = "select * from " + TABLE_NAME;
 		Cursor cursor = db.find(sql);
@@ -48,8 +43,7 @@ public class HistoryDatabase {
 	// 将数据放入本地数据库
 	public void write(String title, String url) {
 		DatabaseOperation db = new DatabaseOperation(mContext);
-		sql = createSql;
-		db.open(DatabaseInfo.DATABASE_NAME, sql);
+		db.open(DatabaseInfo.DATABASE_NAME);
 		
 		// 插入数据库中
 		sql = "insert into " + TABLE_NAME;
@@ -63,8 +57,7 @@ public class HistoryDatabase {
 	// 删除数据库
 	public void delete(int id) {
 		DatabaseOperation db = new DatabaseOperation(mContext);
-		sql = createSql;
-		db.open(DatabaseInfo.DATABASE_NAME, sql);
+		db.open(DatabaseInfo.DATABASE_NAME);
 		
 		sql = "delete from " + TABLE_NAME 
 				+ " where id = " + id + "" ;

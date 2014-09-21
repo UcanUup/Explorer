@@ -12,8 +12,12 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
+import android.widget.Toast;
 
 import com.myexplorer.R;
+import com.myexplorer.lib.Variable;
+import com.myexplorer.sqlite.FavorDatabase;
+import com.myexplorer.tab.FavorFragment;
 import com.myexplorer.tab.HistoryFragment;
 import com.myexplorer.tab.HomeFragment;
 
@@ -119,6 +123,9 @@ public class MainActivity extends Activity implements
 		if (fg instanceof HistoryFragment) {
 			result = ((HistoryFragment) fg).onKeyDown(keyCode, event);
 		}
+		else if (fg instanceof FavorFragment) {
+			result = ((FavorFragment) fg).onKeyDown(keyCode, event);
+		}
 		
 		if (result)
 			return true;
@@ -132,6 +139,20 @@ public class MainActivity extends Activity implements
 		if (position + 1 == EXIT) {
 			finish();
 			return;    // 因为后面的方法还会执行，所以需要return掉
+		}
+		else if (position + 1 == STORE_WEB_PAGE) {
+			if (fg instanceof HomeFragment) {
+				// 插入到收藏夹中
+				FavorDatabase favorDatabase = new FavorDatabase(this);
+				favorDatabase.write(Variable.title, Variable.site);
+			
+				Toast.makeText(this, R.string.already_add_favor, Toast.LENGTH_SHORT).show();
+			}
+			else {
+				Toast.makeText(this, R.string.goto_home_page, Toast.LENGTH_SHORT).show();
+			}
+			
+			return;
 		}
 		
 		// 切换fragment
@@ -225,6 +246,9 @@ public class MainActivity extends Activity implements
 				break;
 			case HISTORY_RECORD: 
 				fragment = new HistoryFragment();
+				break;
+			case MANAGE_FAVOR:
+				fragment = new FavorFragment();
 				break;
 			default:
 				fragment = new PlaceholderFragment();

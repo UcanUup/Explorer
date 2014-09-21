@@ -16,8 +16,8 @@ public class DatabaseOperation {
 	}
 	
 	// 打开数据库
-	public void open(String dbName, String createSql) {
-		databaseHelper = new DatabaseHelper(mContext, dbName, createSql);
+	public void open(String dbName) {
+		databaseHelper = new DatabaseHelper(mContext, dbName);
 	}
 	
 	// 关闭数据库

@@ -21,8 +21,10 @@ import android.widget.Toast;
 import com.myexplorer.R;
 import com.myexplorer.init.MainActivity;
 import com.myexplorer.init.MainActivity.PlaceholderFragment;
+import com.myexplorer.lib.DatabaseInfo;
 import com.myexplorer.lib.HttpUrl;
 import com.myexplorer.lib.Variable;
+import com.myexplorer.sqlite.DatabaseOperation;
 import com.myexplorer.sqlite.HistoryDatabase;
 import com.myexplorer.utils.Validation;
 
@@ -76,8 +78,10 @@ public class HomeFragment extends PlaceholderFragment {
 				}
 				else {
 					mProgress.setVisibility(View.GONE);
+					Variable.title = mWebView.getTitle();
+					Variable.site = mWebView.getUrl();
 					
-					if (loadTimes != FIRST_TIME) {
+					if (loadTimes != FIRST_TIME) {					
 						// 插入到历史记录中
 						HistoryDatabase historyDatabase = new HistoryDatabase(getActivity());
 						historyDatabase.write(mWebView.getTitle(), mWebView.getUrl());
@@ -224,10 +228,26 @@ public class HomeFragment extends PlaceholderFragment {
 		}
 	}
 	
-	void onInit() {
+	void onInit() {		
 		// 从历史记录中跳转的情况		
 		String link = Variable.gotoUrl;
 		Variable.gotoUrl = "";
+		if (link != null && !link.equals("")) {
+			mWebView.loadUrl(link);
+			return;
+		}
+		
+		// 从收藏夹跳转的情况
+		link = Variable.gotoUrl;
+		Variable.gotoUrl2 = "";
+		if (link != null && !link.equals("")) {
+			mWebView.loadUrl(link);
+			return;
+		}
+		
+		// 从其他Fragment跳转回来的情况		
+		link = Variable.site;
+		Variable.site = "";
 		if (link != null && !link.equals("")) {
 			mWebView.loadUrl(link);
 			return;
