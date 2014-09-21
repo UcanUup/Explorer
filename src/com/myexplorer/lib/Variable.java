@@ -17,6 +17,11 @@ public class Variable {
 	public static boolean[] favorChecks;
 	public static String gotoUrl2;
 	
+	// 设置的内容
+	public static boolean[] originChecks;
+	public static boolean[] settingChecks;
+	public static int settingNum;
+	
 	// 当前WebView访问的内容
 	public static String title;
 	public static String site;

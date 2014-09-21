@@ -15,6 +15,7 @@
     <string name="manage_folder">管理收藏夹</string>
     <string name="exit">退出</string>
     
+    <string name="exit_application">再按一次退出程序</string>
     <string name="internet_error">没有网络连接</string>
     
     <string name="already_add_favor">成功添加到收藏夹</string>
@@ -24,5 +25,14 @@
     <string name="select_all">全选</string>
     <string name="delete">删除</string>
     <string name="select_none">全不选</string>
+    <string name="save">保存</string>
+    
+    <string name="setting1_1">禁止加载图像</string>
+    <string name="setting1_2">设置浏览器不加载图像</string>
+    <string name="setting2_1">启用网页缓存</string>
+    <string name="setting2_2">启动网页缓存加快加载速度</string>
+    <string name="setting3_1">启用javascript</string>
+    <string name="setting3_2">启用javascript动态解析脚本</string>
+    <string name="save_success">设置保存成功</string>
     
 </resources>

@@ -14,14 +14,19 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
+import android.view.View;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.myexplorer.R;
+import com.myexplorer.lib.HttpUrl;
 import com.myexplorer.lib.Variable;
 import com.myexplorer.sqlite.FavorDatabase;
+import com.myexplorer.sqlite.SettingDatabase;
 import com.myexplorer.tab.FavorFragment;
 import com.myexplorer.tab.HistoryFragment;
 import com.myexplorer.tab.HomeFragment;
+import com.myexplorer.tab.SettingFragment;
 
 public class MainActivity extends Activity implements
 		NavigationDrawerFragment.NavigationDrawerCallbacks {
@@ -49,16 +54,30 @@ public class MainActivity extends Activity implements
 	
 	// 储存当前fragment
 	private static Fragment fg;
+
+	// 用于代码代开drawer
+	private DrawerLayout mDrawerLayout;
+	private View mFragmentContainerView;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);		
 		setContentView(R.layout.activity_main);
+		
+		// 设置的条数
+		Variable.settingNum = 3;
+		// 读取设置的值
+		SettingDatabase settingDatabase = new SettingDatabase(this);
+		settingDatabase.read();
 
 		mNavigationDrawerFragment = (NavigationDrawerFragment) getFragmentManager()
 				.findFragmentById(R.id.navigation_drawer);
 		mTitle = getTitle();
 
+		// 用于打开drawer
+		mFragmentContainerView = findViewById(R.id.navigation_drawer);
+		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+		
 		// Set up the drawer.
 		mNavigationDrawerFragment.setUp(R.id.navigation_drawer,
 				(DrawerLayout) findViewById(R.id.drawer_layout));
@@ -97,36 +116,42 @@ public class MainActivity extends Activity implements
 	    }
 	    return super.dispatchTouchEvent(ev);
 	}
-	
-	//	private long exitTime = 0;
-	
-	// 用户按下返回键时提示再按一次退出程序
-//	@Override
-//	public boolean onKeyDown(int keyCode, KeyEvent event) {
-//		if (keyCode == KeyEvent.KEYCODE_BACK
-//				&& event.getAction() == KeyEvent.ACTION_DOWN) {
-//			if ((System.currentTimeMillis() - exitTime) > 2000) {
-//				Toast.makeText(getApplicationContext(), getString(R.string.exit_application),
-//						Toast.LENGTH_SHORT).show();
-//				exitTime = System.currentTimeMillis();
-//			} else {
-//				ExitApplication.getInstance().exit();
-//			}
-//			return true;
-//		}
-//		return super.onKeyDown(keyCode, event);
-//	}
 
+	private long exitTime = 0;
 	// 监听按键并传给fragment
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		// result为true使用自定义方法，否则叠加使用父方法
 		boolean result = false;
 		
-		if (fg instanceof HistoryFragment) {
-			result = ((HistoryFragment) fg).onKeyDown(keyCode, event);
+		// 返回键
+		if (keyCode == KeyEvent.KEYCODE_BACK
+				&& event.getAction() == KeyEvent.ACTION_DOWN) {
+			if (fg instanceof HistoryFragment) {
+				result = ((HistoryFragment) fg).onKeyDown(keyCode, event);
+			}
+			else if (fg instanceof FavorFragment) {
+				result = ((FavorFragment) fg).onKeyDown(keyCode, event);
+			}
+			else if (fg instanceof HomeFragment) {
+				// 用户按下返回键时提示再按一次退出程序
+				if ((System.currentTimeMillis() - exitTime) > 2000) {
+					Toast.makeText(this, R.string.exit_application, Toast.LENGTH_SHORT).show();
+					exitTime = System.currentTimeMillis();
+					result = true;
+				} else {
+					finish();
+				}
+			}
 		}
-		else if (fg instanceof FavorFragment) {
-			result = ((FavorFragment) fg).onKeyDown(keyCode, event);
+		else if (keyCode == KeyEvent.KEYCODE_MENU
+				&& event.getAction() == KeyEvent.ACTION_DOWN) {
+			// 菜单键控件drawer
+			if (mDrawerLayout.isDrawerOpen(mFragmentContainerView))
+				mDrawerLayout.closeDrawer(mFragmentContainerView);
+			else
+				mDrawerLayout.openDrawer(mFragmentContainerView);
+			result = true;
 		}
 		
 		if (result)
@@ -139,6 +164,7 @@ public class MainActivity extends Activity implements
 	public void onNavigationDrawerItemSelected(int position) {
 		// 选择退出时直接finish
 		if (position + 1 == EXIT) {
+			Variable.site = HttpUrl.HOME;
 			finish();
 			return;    // 因为后面的方法还会执行，所以需要return掉
 		}
@@ -218,10 +244,6 @@ public class MainActivity extends Activity implements
 		// Handle action bar item clicks here. The action bar will
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
-		if (id == R.id.action_settings) {
-			return true;
-		}
 		return super.onOptionsItemSelected(item);
 	}
 
@@ -273,6 +295,9 @@ public class MainActivity extends Activity implements
 				break;
 			case MANAGE_FAVOR:
 				fragment = new FavorFragment();
+				break;
+			case SETTING:
+				fragment = new SettingFragment();
 				break;
 			default:
 				fragment = new PlaceholderFragment();

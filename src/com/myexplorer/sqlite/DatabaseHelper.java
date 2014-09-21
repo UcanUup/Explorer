@@ -34,6 +34,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		createSql = "create table Favor"
 				+ " (id integer primary key, webname varchar(100), website varchar(100))";
 		db.execSQL(createSql);
+		
+		createSql = "create table Setting"
+				+ " (s1 int, s2 int, s3 int)";
+		db.execSQL(createSql);
 	}
 
 	@Override

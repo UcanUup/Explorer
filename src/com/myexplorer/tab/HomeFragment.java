@@ -1,6 +1,5 @@
 package com.myexplorer.tab;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.GestureDetector;
 import android.view.KeyEvent;
@@ -11,6 +10,7 @@ import android.view.View.OnClickListener;
 import android.view.View.OnKeyListener;
 import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.EditText;
@@ -21,10 +21,8 @@ import android.widget.Toast;
 import com.myexplorer.R;
 import com.myexplorer.init.MainActivity;
 import com.myexplorer.init.MainActivity.PlaceholderFragment;
-import com.myexplorer.lib.DatabaseInfo;
 import com.myexplorer.lib.HttpUrl;
 import com.myexplorer.lib.Variable;
-import com.myexplorer.sqlite.DatabaseOperation;
 import com.myexplorer.sqlite.HistoryDatabase;
 import com.myexplorer.utils.Validation;
 
@@ -63,7 +61,6 @@ public class HomeFragment extends PlaceholderFragment {
 		mProgress = (ProgressBar)rootView.findViewById(R.id.progress);
 		mWebView = (WebView)rootView.findViewById(R.id.web_page);
 		
-		mWebView.getSettings().setJavaScriptEnabled(true);
 		mWebView.getSettings().setBuiltInZoomControls(true);
 		mWebView.getSettings().setUseWideViewPort(true); 
 		mWebView.getSettings().setLoadWithOverviewMode(true);
@@ -229,6 +226,22 @@ public class HomeFragment extends PlaceholderFragment {
 	}
 	
 	void onInit() {		
+		// 判断是否有网络连接
+		if (!Validation.isNetAvailable(getActivity())) {
+			Toast.makeText(getActivity(), R.string.internet_error, Toast.LENGTH_SHORT).show();
+			return;
+		}
+		
+		// 加载设置的WebView访问方式
+		mWebView.getSettings().setBlockNetworkImage(Variable.originChecks[0]);
+		
+		if (Variable.originChecks[1])
+			mWebView.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+		else
+			mWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
+		
+		mWebView.getSettings().setJavaScriptEnabled(Variable.originChecks[2]);
+		
 		// 从历史记录中跳转的情况		
 		String link = Variable.gotoUrl;
 		Variable.gotoUrl = "";
@@ -250,12 +263,6 @@ public class HomeFragment extends PlaceholderFragment {
 		Variable.site = "";
 		if (link != null && !link.equals("")) {
 			mWebView.loadUrl(link);
-			return;
-		}
-		
-		// 判断是否有网络连接
-		if (!Validation.isNetAvailable(getActivity())) {
-			Toast.makeText(getActivity(), R.string.internet_error, Toast.LENGTH_SHORT).show();
 			return;
 		}
 		
