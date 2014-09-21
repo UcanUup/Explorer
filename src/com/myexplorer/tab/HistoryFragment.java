@@ -79,11 +79,6 @@ public class HistoryFragment extends PlaceholderFragment {
 		// 设置这个才能关于菜单的回调函数才有用
 		setHasOptionsMenu(true);
 		
-		// 这个和下面的这个命令必须要设置了，才能监听back事件
-		lv.setFocusable(true);
-        lv.setFocusableInTouchMode(true);
-        lv.setOnKeyListener(backListener);
-		
 		return rootView;
 	}
 
@@ -158,22 +153,20 @@ public class HistoryFragment extends PlaceholderFragment {
 		super.onPrepareOptionsMenu(menu);
 	}
 	
-	private View.OnKeyListener backListener = new View.OnKeyListener() {
-		@Override
-		public boolean onKey(View v, int keyCode, KeyEvent event) {
-			if (keyCode == KeyEvent.KEYCODE_BACK
-					&& event.getAction() == KeyEvent.ACTION_DOWN) {
-				System.out.println("21312");
-				// 删除过程中按下返回键返回
-				allSelect = false;
-				isDelete = false;
-				getActivity().getWindow().invalidatePanelMenu(Window.FEATURE_OPTIONS_PANEL);
-				// 重新设置listview
-				lv.setAdapter(new HistoryAdapter(getActivity(), false, false));
-				return true;
-			}			
-			return false;
-		}
-    };
-
+	// 监听返回键退出删除状态
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        // TODO Auto-generated method stub
+        if (keyCode == event.KEYCODE_BACK
+        		&& event.getAction() == KeyEvent.ACTION_DOWN 
+        		&& isDelete) {
+			// 删除过程中按下返回键返回
+			allSelect = false;
+			isDelete = false;
+			getActivity().getWindow().invalidatePanelMenu(Window.FEATURE_OPTIONS_PANEL);
+			// 重新设置listview
+			lv.setAdapter(new HistoryAdapter(getActivity(), false, false));
+			return true;
+		}			
+		return false;
+    }
 }

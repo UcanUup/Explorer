@@ -8,17 +8,12 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
-import android.view.Window;
 
 import com.myexplorer.R;
-import com.myexplorer.R.id;
-import com.myexplorer.R.layout;
-import com.myexplorer.R.menu;
-import com.myexplorer.R.string;
-import com.myexplorer.init.NavigationDrawerFragment.NavigationDrawerCallbacks;
 import com.myexplorer.tab.HistoryFragment;
 import com.myexplorer.tab.HomeFragment;
 
@@ -45,6 +40,9 @@ public class MainActivity extends Activity implements
 	private static final int SETTING = 5;
 	private static final int SHORTCUT = 6;
 	private static final int EXIT = 7;
+	
+	// 储存当前fragment
+	private static Fragment fg;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -113,6 +111,21 @@ public class MainActivity extends Activity implements
 //		return super.onKeyDown(keyCode, event);
 //	}
 
+	// 监听按键并传给fragment
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		boolean result = false;
+		
+		if (fg instanceof HistoryFragment) {
+			result = ((HistoryFragment) fg).onKeyDown(keyCode, event);
+		}
+		
+		if (result)
+			return true;
+		else
+			return super.onKeyDown(keyCode, event);
+	}
+	
 	@Override
 	public void onNavigationDrawerItemSelected(int position) {
 		// 选择退出时直接finish
@@ -217,6 +230,7 @@ public class MainActivity extends Activity implements
 				fragment = new PlaceholderFragment();
 				break;
 			}
+			fg = fragment;
 			
 			Bundle args = new Bundle();
 			args.putInt(ARG_SECTION_NUMBER, sectionNumber);
