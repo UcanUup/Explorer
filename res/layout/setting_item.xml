@@ -1,0 +1,45 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+  	android:paddingBottom="6dp"
+  	android:paddingLeft="@dimen/activity_horizontal_margin"
+  	android:paddingRight="@dimen/activity_horizontal_margin"
+  	android:paddingTop="6dp" 
+    tools:context="com.example.init.MainActivity$PlaceholderFragment" >
+
+	<TextView
+	    android:id="@+id/name"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_alignLeft="@+id/hint"
+	    android:layout_alignParentTop="true"
+	    android:singleLine="true"
+	    android:ellipsize="end"  
+	    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+	<TextView
+	    android:id="@+id/hint"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_alignParentLeft="true"
+	    android:layout_below="@+id/name"
+	    android:singleLine="true"
+	    android:ellipsize="end"  
+	    android:textAppearance="?android:attr/textAppearanceSmall"
+	    android:textColor="@color/grey" />
+	
+	<RelativeLayout
+	    android:layout_height="wrap_content"
+	    android:layout_width="wrap_content"
+	    android:layout_alignParentRight="true"
+	    android:paddingTop="5dp" >
+		<CheckBox  
+	        android:id="@+id/item_cb"  
+	        android:layout_width="wrap_content"  
+	        android:layout_height="fill_parent"  
+	        android:layout_alignParentRight="true"
+	        android:gravity="center_vertical" /> 
+	</RelativeLayout>
+	
+</RelativeLayout>
